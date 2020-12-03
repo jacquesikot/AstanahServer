@@ -1,9 +1,16 @@
 import { PORT } from './constants';
 import App from './config/appServer';
-import { Home, Products, Categories, Auth, Users } from './controllers';
+import { Home, Products, Categories, Auth, Users, Orders } from './controllers';
 
 const app = new App(
-  [new Home(), new Products(), new Categories(), new Auth(), new Users()],
+  [
+    new Home(),
+    new Products(),
+    new Categories(),
+    new Auth(),
+    new Users(),
+    new Orders(),
+  ],
   PORT
 );
 

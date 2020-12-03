@@ -48,7 +48,7 @@ class UserService {
     }
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield prisma.app_users.findOne({ where: { ID: id } });
+            let user = yield prisma.app_users.findOne({ where: { id: id } });
             return user;
         });
     }
@@ -77,7 +77,7 @@ class UserService {
     }
     getToken(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const token = jsonwebtoken_1.default.sign({ ID: id }, constants_1.JWT_KEY);
+            const token = jsonwebtoken_1.default.sign({ id: id }, constants_1.JWT_KEY);
             return token.toString();
         });
     }

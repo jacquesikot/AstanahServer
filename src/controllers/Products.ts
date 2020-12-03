@@ -1,10 +1,12 @@
-import { Request, Response, Router } from 'express';
+import { Router, RequestHandler } from 'express';
 
 import { ProductServices } from '../services';
 import { redisClient } from '../config';
-import { Cache } from '../middlewares';
+// import { Cache } from '../middlewares';
 
-const cache = new Cache();
+const log = require('debug')('app:log');
+
+// const cache = new Cache();
 const productService = new ProductServices();
 
 class Products {
@@ -16,22 +18,23 @@ class Products {
   }
 
   private intializeRoutes() {
-    this.router.get(this.path, cache.products, this.getProducts);
+    this.router.get(this.path, this.getProducts);
     this.router.get(this.path + '/search', this.searchProducts);
+    this.router.get(this.path + '/filter', this.filterProducts);
   }
 
-  private getProducts = async (_req: Request, res: Response) => {
+  private getProducts: RequestHandler = async (_req, res) => {
     try {
       const products = await productService.getProducts();
       const redisData = JSON.stringify(products);
       redisClient.setex('products', 3600, redisData);
       res.send(products);
     } catch (e) {
-      console.log(e);
+      log(e);
     }
   };
 
-  private searchProducts = async (req: Request, res: Response) => {
+  private searchProducts: RequestHandler = async (req, res) => {
     if (req.query.search) {
       try {
         const products = await productService.searchProducts(
@@ -39,8 +42,21 @@ class Products {
         );
         res.send(products);
       } catch (e) {
-        console.log(e);
+        log(e);
       }
+    }
+  };
+
+  private filterProducts: RequestHandler = async (req, res) => {
+    try {
+      if (req.query.category) {
+        const products = await productService.filterCategory(
+          Number(req.query.category)
+        );
+        res.send(products);
+      }
+    } catch (e) {
+      log(e);
     }
   };
 }

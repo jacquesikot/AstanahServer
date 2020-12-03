@@ -17,7 +17,7 @@ export default class UserService {
   }
 
   public async findUserById(id: number) {
-    let user = await prisma.app_users.findOne({ where: { ID: id } });
+    let user = await prisma.app_users.findOne({ where: { id: id } });
     return user;
   }
 
@@ -42,7 +42,7 @@ export default class UserService {
   }
 
   public async getToken(id: number | undefined) {
-    const token = jwt.sign({ ID: id }, JWT_KEY);
+    const token = jwt.sign({ id: id }, JWT_KEY);
     return token.toString();
   }
 }

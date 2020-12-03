@@ -12,8 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const services_1 = require("../services");
 const config_1 = require("../config");
-const middlewares_1 = require("../middlewares");
-const cache = new middlewares_1.Cache();
+const log = require('debug')('app:log');
 const productService = new services_1.ProductServices();
 class Products {
     constructor() {
@@ -27,7 +26,7 @@ class Products {
                 res.send(products);
             }
             catch (e) {
-                console.log(e);
+                log(e);
             }
         });
         this.searchProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -37,15 +36,27 @@ class Products {
                     res.send(products);
                 }
                 catch (e) {
-                    console.log(e);
+                    log(e);
                 }
+            }
+        });
+        this.filterProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (req.query.category) {
+                    const products = yield productService.filterCategory(Number(req.query.category));
+                    res.send(products);
+                }
+            }
+            catch (e) {
+                log(e);
             }
         });
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.get(this.path, cache.products, this.getProducts);
+        this.router.get(this.path, this.getProducts);
         this.router.get(this.path + '/search', this.searchProducts);
+        this.router.get(this.path + '/filter', this.filterProducts);
     }
 }
 exports.default = Products;

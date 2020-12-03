@@ -32,7 +32,7 @@ class Auth {
     if (!validPassword)
       return res.status(400).send('Invalid email and/or password');
 
-    const token = await services.getToken(user.ID);
+    const token = await services.getToken(user.id);
     res.send(token);
   };
 }

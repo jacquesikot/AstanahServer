@@ -1,7 +1,7 @@
 import redis from 'redis';
-import { REDISCLOUD_URL } from '../constants';
+import { REDIS_PORT } from '../constants';
 
-const redisClient = redis.createClient(REDISCLOUD_URL, {
+const redisClient = redis.createClient(REDIS_PORT, {
   no_ready_check: true,
 });
 

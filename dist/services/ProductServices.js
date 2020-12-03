@@ -14,8 +14,13 @@ const prisma = new client_1.PrismaClient();
 class ProductServices {
     getProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const products = yield prisma.mytable.findMany({
+            const products = yield prisma.app_products.findMany({
                 take: 20,
+                where: {
+                    Regular_price: {
+                        gt: 1,
+                    },
+                },
             });
             if (!products)
                 return [];
@@ -24,7 +29,7 @@ class ProductServices {
     }
     searchProducts(searchParam) {
         return __awaiter(this, void 0, void 0, function* () {
-            const products = yield prisma.mytable.findMany({
+            const products = yield prisma.app_products.findMany({
                 take: 20,
                 where: {
                     OR: [
@@ -43,6 +48,25 @@ class ProductServices {
             });
             if (!products)
                 return [];
+            return products;
+        });
+    }
+    filterCategory(categoryId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const category = yield prisma.app_categories.findOne({
+                where: {
+                    id: categoryId,
+                },
+            });
+            if (!category)
+                return [];
+            const products = yield prisma.app_products.findMany({
+                where: {
+                    Categories: {
+                        contains: category.category_name,
+                    },
+                },
+            });
             return products;
         });
     }
