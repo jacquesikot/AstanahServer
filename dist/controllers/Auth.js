@@ -27,14 +27,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
+const passport_1 = __importDefault(require("passport"));
 const validation_1 = require("../validation");
 const services_1 = require("../services");
 const services = new services_1.UserServices();
 class Auth {
     constructor() {
-        this.path = '/auth/local';
+        this.path = '/auth';
         this.router = express.Router();
         this.loginUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { error } = validation_1.validateAuth(req.body);
@@ -52,7 +56,11 @@ class Auth {
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.post(this.path, this.loginUser);
+        this.router.post(this.path + `/local`, this.loginUser);
+        this.router.get(this.path + `/google`, passport_1.default.authenticate('google', { scope: ['profile'] }));
+        this.router.get(this.path + `/google/callback`, passport_1.default.authenticate('google', { failureRedirect: '/login' }), function (_req, res) {
+            res.redirect('/');
+        });
     }
 }
 exports.default = Auth;

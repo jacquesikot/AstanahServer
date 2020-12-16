@@ -12,7 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const services_1 = require("../services");
 const config_1 = require("../config");
+const middlewares_1 = require("../middlewares");
 const log = require('debug')('app:log');
+const cache = new middlewares_1.Cache();
 const productService = new services_1.ProductServices();
 class Products {
     constructor() {
@@ -42,8 +44,9 @@ class Products {
         });
         this.filterProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                if (req.query.category) {
-                    const products = yield productService.filterCategory(Number(req.query.category));
+                if (req.params.category) {
+                    console.log(req.params);
+                    const products = yield productService.filterCategory(Number(req.params.category));
                     res.send(products);
                 }
             }
@@ -54,7 +57,7 @@ class Products {
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.get(this.path, this.getProducts);
+        this.router.get(this.path, cache.products, this.getProducts);
         this.router.get(this.path + '/search', this.searchProducts);
         this.router.get(this.path + '/filter', this.filterProducts);
     }

@@ -2,11 +2,11 @@ import { Router, RequestHandler } from 'express';
 
 import { ProductServices } from '../services';
 import { redisClient } from '../config';
-// import { Cache } from '../middlewares';
+import { Cache } from '../middlewares';
 
 const log = require('debug')('app:log');
 
-// const cache = new Cache();
+const cache = new Cache();
 const productService = new ProductServices();
 
 class Products {
@@ -18,7 +18,7 @@ class Products {
   }
 
   private intializeRoutes() {
-    this.router.get(this.path, this.getProducts);
+    this.router.get(this.path, cache.products, this.getProducts);
     this.router.get(this.path + '/search', this.searchProducts);
     this.router.get(this.path + '/filter', this.filterProducts);
   }
@@ -49,9 +49,10 @@ class Products {
 
   private filterProducts: RequestHandler = async (req, res) => {
     try {
-      if (req.query.category) {
+      if (req.params.category) {
+        console.log(req.params);
         const products = await productService.filterCategory(
-          Number(req.query.category)
+          Number(req.params.category)
         );
         res.send(products);
       }

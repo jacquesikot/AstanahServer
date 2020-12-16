@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
+import passport from 'passport';
 
 import { validateAuth } from '../validation';
 import { UserServices } from '../services';
@@ -7,7 +8,7 @@ import { UserServices } from '../services';
 const services = new UserServices();
 
 class Auth {
-  public path = '/auth/local';
+  public path = '/auth';
   public router = express.Router();
 
   constructor() {
@@ -15,7 +16,19 @@ class Auth {
   }
 
   private intializeRoutes() {
-    this.router.post(this.path, this.loginUser);
+    this.router.post(this.path + `/local`, this.loginUser);
+    this.router.get(
+      this.path + `/google`,
+      passport.authenticate('google', { scope: ['profile'] })
+    );
+    this.router.get(
+      this.path + `/google/callback`,
+      passport.authenticate('google', { failureRedirect: '/login' }),
+      function (_req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+      }
+    );
   }
 
   private loginUser = async (req: Request, res: Response) => {
