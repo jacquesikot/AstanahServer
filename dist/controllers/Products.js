@@ -20,33 +20,23 @@ class Products {
     constructor() {
         this.path = '/api/products';
         this.router = express_1.Router();
-        this.getProducts = (_req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const products = yield productService.getProducts();
-                const redisData = JSON.stringify(products);
-                config_1.redisClient.setex('products', 3600, redisData);
-                res.send(products);
-            }
-            catch (e) {
-                log(e);
-            }
-        });
-        this.searchProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            if (req.query.search) {
-                try {
-                    const products = yield productService.searchProducts(req.query.search.toString());
+                const query = req.query;
+                if (query.category) {
+                    const searchString = query.category.toString();
+                    const products = yield productService.filterCategory(searchString);
                     res.send(products);
                 }
-                catch (e) {
-                    log(e);
+                else if (query.searchBy) {
+                    const searchString = query.searchBy.toString();
+                    const products = yield productService.searchProducts(searchString);
+                    res.send(products);
                 }
-            }
-        });
-        this.filterProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (req.params.category) {
-                    console.log(req.params);
-                    const products = yield productService.filterCategory(Number(req.params.category));
+                else {
+                    const products = yield productService.getProducts();
+                    const redisData = JSON.stringify(products);
+                    config_1.redisClient.setex('products', 3600, redisData);
                     res.send(products);
                 }
             }
@@ -58,8 +48,6 @@ class Products {
     }
     intializeRoutes() {
         this.router.get(this.path, cache.products, this.getProducts);
-        this.router.get(this.path + '/search', this.searchProducts);
-        this.router.get(this.path + '/filter', this.filterProducts);
     }
 }
 exports.default = Products;

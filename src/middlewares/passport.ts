@@ -6,36 +6,44 @@ import {
   GOOGLE_CLIENT_SECRET,
   GOOGLE_CALLBACK_URL,
 } from '../constants';
+import { IOauthUser } from 'src/types';
 
 const GoogleStrategy = GooglePassport.Strategy;
 
-const userProfile = (profile: any) => {
-  const { id, provider, photos, emails, displayName } = profile;
-  let imageUrl = '';
-  let email = '';
-  if (emails && emails.length) {
-    email = emails[0].value;
-  }
-  if (photos && photos.length) {
-    imageUrl = photos[0].value;
-  }
+const userProfile = (profile: IOauthUser) => {
+  const { id, name, emails, provider } = profile;
+  let firstName;
+  let lastName;
+  let email;
+
+  if (emails && emails.length) email = emails[0].value;
+  if (name.givenName) firstName = name.givenName;
+  if (name.familyName) lastName = name.familyName;
+
   return {
-    social_id: id,
-    name: displayName,
-    image: imageUrl,
+    id,
+    firstName,
+    lastName,
     email,
     provider,
   };
 };
 
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
 passport.use(
-  'google',
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: GOOGLE_CALLBACK_URL,
-      scope: ['profile', 'email', 'openid'],
+      scope: ['profile', 'email'],
       passReqToCallback: true,
     },
     (_req: any, _accessToken: any, _refreshToken: any, profile: any, cb: any) =>

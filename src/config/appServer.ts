@@ -5,8 +5,10 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import compression from 'compression';
+import passport from 'passport';
 // import mongoose from 'mongoose';
 
+require('../middlewares/passport');
 const log = require('debug')('app:log');
 
 import { ControllerProps } from '../types';
@@ -35,6 +37,7 @@ class App {
     }
     this.app.use(helmet());
     this.app.use(compression());
+    this.app.use(passport.initialize());
   }
 
   private initializeControllers(controllers: ControllerProps[]) {

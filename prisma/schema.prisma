@@ -7,6 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model app_billing_address {
+  id         Int          @id @default(autoincrement())
+  user_id    Int
+  first_name String
+  last_name  String
+  address    String
+  city       String
+  state      String
+  postcode   String
+  country    String
+  email      String
+  phone      String
+  app_users  app_users    @relation(fields: [user_id], references: [id])
+  app_orders app_orders[]
+
+  @@index([user_id], name: "userId")
+}
+
+model app_categories {
+  id            Int    @id @default(autoincrement())
+  category_name String
+  slug          String
+
+  @@index([category_name], name: "category_name")
+}
+
+model app_order_details {
+  id           Int          @id @default(autoincrement())
+  order_id     Int
+  user_id      Int
+  product_id   Int
+  quantity     String
+  app_orders   app_orders   @relation(fields: [order_id], references: [id])
+  app_products app_products @relation(fields: [product_id], references: [id])
+  app_users    app_users    @relation(fields: [user_id], references: [id])
+
+  @@index([product_id], name: "app_order_details_ibfk_3")
+  @@index([order_id], name: "order_id")
+  @@index([user_id], name: "user_id")
+}
+
+model app_orders {
+  id                  Int                 @id @default(autoincrement())
+  user_id             Int
+  payment_method      String
+  set_paid            Boolean
+  billing_id          Int
+  app_billing_address app_billing_address @relation(fields: [billing_id], references: [id])
+  app_users           app_users           @relation(fields: [user_id], references: [id])
+  app_order_details   app_order_details[]
+
+  @@index([billing_id], name: "billing_id")
+  @@index([user_id], name: "user_id")
+}
+
 model app_products {
   id                 Int                 @id
   Meta_thumbnail_id  String
@@ -43,12 +98,15 @@ model app_products {
   @@index([Categories], name: "Categories")
 }
 
-model app_categories {
-  id            Int    @id @default(autoincrement())
-  category_name String
-  slug          String
+model app_user_likes {
+  id           Int          @id @default(autoincrement())
+  user_id      Int
+  product_id   Int
+  app_products app_products @relation(fields: [product_id], references: [id])
+  app_users    app_users    @relation(fields: [user_id], references: [id])
 
-  @@index([category_name], name: "category_name")
+  @@index([user_id], name: "app_user_likes_ibfk_1")
+  @@index([product_id], name: "app_user_likes_ibfk_2")
 }
 
 model app_users {
@@ -60,84 +118,7 @@ model app_users {
   google_id           String?
   facebook_id         String?
   app_billing_address app_billing_address[]
+  app_order_details   app_order_details[]
   app_orders          app_orders[]
-  app_order_details   app_order_details[]
   app_user_likes      app_user_likes[]
-}
-
-model app_billing_address {
-  id         Int          @id @default(autoincrement())
-  user_id    Int
-  first_name String
-  last_name  String
-  address    String
-  city       String
-  state      String
-  postcode   String
-  country    String
-  email      String
-  phone      String
-  app_users  app_users    @relation(fields: [user_id], references: [id])
-  app_orders app_orders[]
-
-  @@index([user_id], name: "userId")
-}
-
-model app_orders {
-  id                  Int                 @id @default(autoincrement())
-  user_id             Int
-  payment_method      String
-  set_paid            Boolean
-  billing_id          Int
-  app_billing_address app_billing_address @relation(fields: [billing_id], references: [id])
-  app_users           app_users           @relation(fields: [user_id], references: [id])
-  app_order_details   app_order_details[]
-
-  @@index([billing_id], name: "billing_id")
-  @@index([user_id], name: "user_id")
-}
-
-model app_order_details {
-  id           Int          @id @default(autoincrement())
-  order_id     Int
-  user_id      Int
-  product_id   Int
-  quantity     String
-  app_orders   app_orders   @relation(fields: [order_id], references: [id])
-  app_products app_products @relation(fields: [product_id], references: [id])
-  app_users    app_users    @relation(fields: [user_id], references: [id])
-
-  @@index([product_id], name: "app_order_details_ibfk_3")
-  @@index([order_id], name: "order_id")
-  @@index([user_id], name: "user_id")
-}
-
-model app_table {
-  id                Int     @id
-  Meta_thumbnail_id String?
-  Title             String
-  Description       String
-  Short_Desc        String
-  Type              String
-  Status            String
-  Regular_price     Float
-  Sale_price        Int
-  SKU               String?
-  Manage_stock      Int
-  Stock_quantity    Int
-  Stock_status      Int
-  Meta_service_type Int?
-  Tags              String?
-  FIELD16           String?
-}
-
-model app_user_likes {
-  id           Int          @id @default(autoincrement())
-  user_id      Int
-  product_id   Int
-  app_products app_products @relation(fields: [product_id], references: [id])
-  app_users    app_users    @relation(fields: [user_id], references: [id])
-
-  @@index([user_id], name: "app_user_likes_ibfk_1")
-  @@index([product_id], name: "app_user_likes_ibfk_2")
 }

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
-import { IUser } from '../types';
+import { IGoogleAuth, IUser } from '../types';
 import { JWT_KEY } from '../constants';
 
 const prisma = new PrismaClient();
@@ -12,6 +12,13 @@ export default class UserService {
   public async findUser(user_params: IUser) {
     let user = await prisma.app_users.findOne({
       where: { email: user_params.email },
+    });
+    return user;
+  }
+
+  public async findOauthUser(user_email: string) {
+    let user = await prisma.app_users.findOne({
+      where: { email: user_email },
     });
     return user;
   }
@@ -33,6 +40,24 @@ export default class UserService {
       },
     });
     return _.pick(user, ['ID', 'first_name', 'email']);
+  }
+
+  public async createGoogleUser(user_params: IGoogleAuth) {
+    const { id, firstName, lastName, email } = user_params;
+
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(id, salt);
+
+    let user = await prisma.app_users.create({
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        google_id: id,
+        password,
+      },
+    });
+    return _.pick(user, ['id', 'first_name', 'email']);
   }
 
   public async validatePassword(reqPassword: string, userPassword: string) {

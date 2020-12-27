@@ -46,6 +46,14 @@ class UserService {
             return user;
         });
     }
+    findOauthUser(user_email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield prisma.app_users.findOne({
+                where: { email: user_email },
+            });
+            return user;
+        });
+    }
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield prisma.app_users.findOne({ where: { id: id } });
@@ -65,6 +73,23 @@ class UserService {
                 },
             });
             return _.pick(user, ['ID', 'first_name', 'email']);
+        });
+    }
+    createGoogleUser(user_params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, firstName, lastName, email } = user_params;
+            const salt = yield bcrypt_1.default.genSalt(10);
+            const password = yield bcrypt_1.default.hash(id, salt);
+            let user = yield prisma.app_users.create({
+                data: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    google_id: id,
+                    password,
+                },
+            });
+            return _.pick(user, ['id', 'first_name', 'email']);
         });
     }
     validatePassword(reqPassword, userPassword) {

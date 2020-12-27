@@ -38,21 +38,16 @@ export default class ProductServices {
     return products;
   }
 
-  // Check, maybe we can use the category name directly, instead of making multiple DB calls
-  public async filterCategory(categoryId: number) {
-    const category = await prisma.app_categories.findOne({
-      where: {
-        id: categoryId,
-      },
-    });
-    if (!category) return [];
+  public async filterCategory(categoryName: string) {
     const products = await prisma.app_products.findMany({
+      take: 20,
       where: {
         Categories: {
-          contains: category.category_name,
+          contains: categoryName.toLowerCase(),
         },
       },
     });
+    if (!products) return [];
     return products;
   }
 }

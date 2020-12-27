@@ -38,7 +38,7 @@ const services_1 = require("../services");
 const services = new services_1.UserServices();
 class Auth {
     constructor() {
-        this.path = '/auth';
+        this.path = '/api/auth';
         this.router = express.Router();
         this.loginUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { error } = validation_1.validateAuth(req.body);
@@ -53,12 +53,37 @@ class Auth {
             const token = yield services.getToken(user.id);
             res.send(token);
         });
+        this.loginGoogleUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { error } = validation_1.validateGoogleAuth(req.user);
+                if (error)
+                    return res.status(400).send(error.details[0].message);
+                const user = yield services.findOauthUser(req.user.email);
+                if (!user) {
+                    const newUser = yield services.createGoogleUser(req.user);
+                    const newUserToken = yield services.getToken(newUser.id);
+                    res.send(newUserToken);
+                }
+                else if (user) {
+                    const token = yield services.getToken(user.id);
+                    res.send(token);
+                }
+            }
+            catch (e) {
+                console.error(e);
+            }
+        });
         this.intializeRoutes();
     }
     intializeRoutes() {
         this.router.post(this.path + `/local`, this.loginUser);
-        this.router.get(this.path + `/google`, passport_1.default.authenticate('google', { scope: ['profile'] }));
-        this.router.get(this.path + `/google/callback`, passport_1.default.authenticate('google', { failureRedirect: '/login' }), function (_req, res) {
+        this.router.get(this.path + `/google`, passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
+        this.router.get(this.path + `/google/callback`, passport_1.default.authenticate('google', { failureRedirect: '/google/error' }), this.loginGoogleUser);
+        this.router.get(this.path + `/google/error`, function (_req, res) {
+            res.redirect('/');
+        });
+        this.router.get(this.path + `/google/logout`, function (req, res) {
+            req.logout();
             res.redirect('/');
         });
     }

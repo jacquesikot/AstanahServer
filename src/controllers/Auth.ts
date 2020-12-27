@@ -2,13 +2,13 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import passport from 'passport';
 
-import { validateAuth } from '../validation';
+import { validateAuth, validateGoogleAuth } from '../validation';
 import { UserServices } from '../services';
 
 const services = new UserServices();
 
 class Auth {
-  public path = '/auth';
+  public path = '/api/auth';
   public router = express.Router();
 
   constructor() {
@@ -17,18 +17,26 @@ class Auth {
 
   private intializeRoutes() {
     this.router.post(this.path + `/local`, this.loginUser);
+
     this.router.get(
       this.path + `/google`,
-      passport.authenticate('google', { scope: ['profile'] })
+      passport.authenticate('google', { scope: ['profile', 'email'] })
     );
+
     this.router.get(
       this.path + `/google/callback`,
-      passport.authenticate('google', { failureRedirect: '/login' }),
-      function (_req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/');
-      }
+      passport.authenticate('google', { failureRedirect: '/google/error' }),
+      this.loginGoogleUser
     );
+
+    this.router.get(this.path + `/google/error`, function (_req, res) {
+      res.redirect('/');
+    });
+
+    this.router.get(this.path + `/google/logout`, function (req, res) {
+      req.logout();
+      res.redirect('/');
+    });
   }
 
   private loginUser = async (req: Request, res: Response) => {
@@ -47,6 +55,25 @@ class Auth {
 
     const token = await services.getToken(user.id);
     res.send(token);
+  };
+
+  private loginGoogleUser = async (req: any, res: Response) => {
+    try {
+      const { error } = validateGoogleAuth(req.user);
+      if (error) return res.status(400).send(error.details[0].message);
+
+      const user = await services.findOauthUser(req.user.email);
+      if (!user) {
+        const newUser = await services.createGoogleUser(req.user);
+        const newUserToken = await services.getToken(newUser.id);
+        res.send(newUserToken);
+      } else if (user) {
+        const token = await services.getToken(user.id);
+        res.send(token);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 }
 

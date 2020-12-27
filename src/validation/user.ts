@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { IUser } from '../types';
+import { IGoogleAuth, IUser } from '../types';
 
 const validateUser = (user: IUser) => {
   const schema = Joi.object({
@@ -26,6 +26,17 @@ export const validateAuth = (credential: ILogin) => {
     password: Joi.string().min(3).max(255).required(),
   });
   return schema.validate(credential);
+};
+
+export const validateGoogleAuth = (credentials: IGoogleAuth) => {
+  const schema = Joi.object({
+    id: Joi.string().required(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
+    email: Joi.string().email(),
+    provider: Joi.string(),
+  });
+  return schema.validate(credentials);
 };
 
 export default validateUser;

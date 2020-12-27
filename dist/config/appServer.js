@@ -29,6 +29,8 @@ const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const helmet_1 = __importDefault(require("helmet"));
 const compression_1 = __importDefault(require("compression"));
+const passport_1 = __importDefault(require("passport"));
+require('../middlewares/passport');
 const log = require('debug')('app:log');
 const constants_1 = require("../constants");
 class App {
@@ -50,6 +52,7 @@ class App {
         }
         this.app.use(helmet_1.default());
         this.app.use(compression_1.default());
+        this.app.use(passport_1.default.initialize());
     }
     initializeControllers(controllers) {
         controllers.forEach((controller) => {

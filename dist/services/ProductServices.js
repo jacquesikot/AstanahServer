@@ -51,22 +51,18 @@ class ProductServices {
             return products;
         });
     }
-    filterCategory(categoryId) {
+    filterCategory(categoryName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const category = yield prisma.app_categories.findOne({
-                where: {
-                    id: categoryId,
-                },
-            });
-            if (!category)
-                return [];
             const products = yield prisma.app_products.findMany({
+                take: 20,
                 where: {
                     Categories: {
-                        contains: category.category_name,
+                        contains: categoryName.toLowerCase(),
                     },
                 },
             });
+            if (!products)
+                return [];
             return products;
         });
     }
