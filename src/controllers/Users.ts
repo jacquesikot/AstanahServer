@@ -18,6 +18,7 @@ class User {
   private intializeRoutes() {
     this.router.post(this.path, this.addUser);
     this.router.get(this.path, auth, this.getUser);
+    this.router.post(this.path + `/update`, auth, this.updateUser);
   }
 
   private addUser = async (req: Request, res: Response) => {
@@ -30,7 +31,7 @@ class User {
 
       const response = await services.createUser(req.body);
 
-      const token = await services.getToken(response.id);
+      const token = await services.getToken(response);
       res.header('x-auth-token', token).send(response);
     } catch (e) {
       console.log(e);
@@ -40,6 +41,17 @@ class User {
   private getUser = async (req: any, res: Response) => {
     const user = await services.findUserById(req.user.id);
     res.send(user);
+  };
+
+  private updateUser = async (req: any, res: Response) => {
+    // Run validation
+    try {
+      const user = await services.updateUser(req.body);
+      res.send(user);
+      // console.log(user);
+    } catch (e) {
+      console.error(e);
+    }
   };
 }
 

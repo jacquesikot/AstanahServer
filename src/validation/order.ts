@@ -1,5 +1,3 @@
-// I have not tested this
-
 import Joi from 'joi';
 
 import { IOrder } from '../types';
@@ -10,7 +8,7 @@ const validateOrder = (order: IOrder) => {
     payment_method: Joi.string().min(3).max(15).required(),
     set_paid: Joi.boolean().required(),
     billing_id: Joi.number().required(),
-    products: Joi.object(),
+    products: Joi.array(),
   });
 
   return schema.validate(order);

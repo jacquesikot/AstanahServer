@@ -7,7 +7,6 @@ interface IBilling {
   state: string;
   postcode: string;
   country: string;
-  email: string;
   phone: string;
 }
 

@@ -14,28 +14,34 @@ const prisma = new client_1.PrismaClient();
 class OrderServices {
     getOrders() {
         return __awaiter(this, void 0, void 0, function* () {
-            const orders = yield prisma.app_orders.findMany();
-            if (!orders)
-                return [];
-            return orders;
+            try {
+                const orders = yield prisma.app_orders.findMany();
+                if (!orders)
+                    return [];
+                return orders;
+            }
+            catch (e) {
+                console.log(e);
+            }
         });
     }
     newOrder(order_props) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { user_id, billing_id, payment_method, set_paid, products, } = order_props;
             const order = yield prisma.app_orders.create({
                 data: {
-                    payment_method: order_props.payment_method,
-                    set_paid: order_props.set_paid,
+                    payment_method,
+                    set_paid,
                     app_users: {
-                        connect: { id: order_props.user_id },
+                        connect: { id: user_id },
                     },
                     app_billing_address: {
-                        connect: { id: order_props.billing_id },
+                        connect: { id: billing_id },
                     },
                 },
             });
-            yield order_props.products.map((p) => __awaiter(this, void 0, void 0, function* () {
-                const orderDetail = yield prisma.app_order_details.create({
+            products.map((p) => __awaiter(this, void 0, void 0, function* () {
+                yield prisma.app_order_details.create({
                     data: {
                         quantity: p.quantity,
                         app_products: {
@@ -49,30 +55,19 @@ class OrderServices {
                         },
                     },
                 });
-                return orderDetail;
+                return;
             }));
             return order;
         });
     }
-    newBilling(billing_props) {
+    getUserOrders(user_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const billing = yield prisma.app_billing_address.create({
-                data: {
-                    app_users: {
-                        connect: { id: billing_props.user_id },
-                    },
-                    first_name: billing_props.first_name,
-                    last_name: billing_props.last_name,
-                    address: billing_props.address,
-                    city: billing_props.city,
-                    state: billing_props.state,
-                    postcode: billing_props.postcode,
-                    country: billing_props.country,
-                    email: billing_props.email,
-                    phone: billing_props.phone,
+            const orders = yield prisma.app_orders.findMany({
+                where: {
+                    user_id,
                 },
             });
-            return billing;
+            return orders;
         });
     }
 }

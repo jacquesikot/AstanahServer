@@ -40,70 +40,126 @@ const prisma = new client_1.PrismaClient();
 class UserService {
     findUser(user_params) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield prisma.app_users.findOne({
-                where: { email: user_params.email },
-            });
-            return user;
+            try {
+                let user = yield prisma.app_users.findOne({
+                    where: { email: user_params.email },
+                });
+                return user;
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
     findOauthUser(user_email) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield prisma.app_users.findOne({
-                where: { email: user_email },
-            });
-            return user;
+            try {
+                let user = yield prisma.app_users.findOne({
+                    where: { email: user_email },
+                });
+                return user;
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield prisma.app_users.findOne({ where: { id: id } });
-            return user;
+            try {
+                let user = yield prisma.app_users.findOne({ where: { id: id } });
+                return user;
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
     createUser(user_params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const salt = yield bcrypt_1.default.genSalt(10);
-            user_params.password = yield bcrypt_1.default.hash(user_params.password, salt);
-            let user = yield prisma.app_users.create({
-                data: {
-                    first_name: user_params.first_name,
-                    last_name: user_params.last_name,
-                    email: user_params.email,
-                    password: user_params.password,
-                },
-            });
-            return _.pick(user, ['ID', 'first_name', 'email']);
+            try {
+                const salt = yield bcrypt_1.default.genSalt(10);
+                user_params.password = yield bcrypt_1.default.hash(user_params.password, salt);
+                let user = yield prisma.app_users.create({
+                    data: {
+                        first_name: user_params.first_name,
+                        last_name: user_params.last_name,
+                        email: user_params.email,
+                        password: user_params.password,
+                    },
+                });
+                return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
     createGoogleUser(user_params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, firstName, lastName, email } = user_params;
-            const salt = yield bcrypt_1.default.genSalt(10);
-            const password = yield bcrypt_1.default.hash(id, salt);
-            let user = yield prisma.app_users.create({
-                data: {
-                    first_name: firstName,
-                    last_name: lastName,
-                    email: email,
-                    google_id: id,
-                    password,
-                },
-            });
-            return _.pick(user, ['id', 'first_name', 'email']);
+            try {
+                const { id, firstName, lastName, email } = user_params;
+                const salt = yield bcrypt_1.default.genSalt(10);
+                const password = yield bcrypt_1.default.hash(id, salt);
+                let user = yield prisma.app_users.create({
+                    data: {
+                        first_name: firstName,
+                        last_name: lastName,
+                        email: email,
+                        google_id: id,
+                        password,
+                    },
+                });
+                return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        });
+    }
+    updateUser(user_params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id, first_name, last_name } = user_params;
+                const user = yield prisma.app_users.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        first_name,
+                        last_name,
+                    },
+                });
+                return user;
+            }
+            catch (e) {
+                console.error;
+            }
         });
     }
     validatePassword(reqPassword, userPassword) {
         return __awaiter(this, void 0, void 0, function* () {
-            const validPassword = yield bcrypt_1.default.compare(reqPassword, userPassword);
-            if (!validPassword)
-                return false;
-            return true;
+            try {
+                const validPassword = yield bcrypt_1.default.compare(reqPassword, userPassword);
+                if (!validPassword)
+                    return false;
+                return true;
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
-    getToken(id) {
+    getToken(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const token = jsonwebtoken_1.default.sign({ id: id }, constants_1.JWT_KEY);
-            return token.toString();
+            try {
+                const { id, first_name, last_name, email } = user;
+                const token = jsonwebtoken_1.default.sign({ id, first_name, last_name, email }, constants_1.JWT_KEY);
+                return token.toString();
+            }
+            catch (e) {
+                console.error(e);
+            }
         });
     }
 }

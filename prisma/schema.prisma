@@ -17,7 +17,6 @@ model app_billing_address {
   state      String
   postcode   String
   country    String
-  email      String
   phone      String
   app_users  app_users    @relation(fields: [user_id], references: [id])
   app_orders app_orders[]

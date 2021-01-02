@@ -46,7 +46,7 @@ class User {
                 if (user)
                     return res.status(400).send('User already registered');
                 const response = yield services.createUser(req.body);
-                const token = yield services.getToken(response.id);
+                const token = yield services.getToken(response);
                 res.header('x-auth-token', token).send(response);
             }
             catch (e) {
@@ -57,11 +57,21 @@ class User {
             const user = yield services.findUserById(req.user.id);
             res.send(user);
         });
+        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield services.updateUser(req.body);
+                res.send(user);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        });
         this.intializeRoutes();
     }
     intializeRoutes() {
         this.router.post(this.path, this.addUser);
         this.router.get(this.path, middlewares_1.auth, this.getUser);
+        this.router.post(this.path + `/update`, middlewares_1.auth, this.updateUser);
     }
 }
 exports.default = User;

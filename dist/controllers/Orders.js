@@ -38,20 +38,10 @@ class Orders {
                 console.log(e);
             }
         });
-        this.newBilling = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const billing = yield orderServices.newBilling(req.body);
-                res.send(billing);
-            }
-            catch (e) {
-                console.log(e);
-            }
-        });
         this.intializeRoutes();
     }
     intializeRoutes() {
         this.router.post(this.path, this.newOrder);
-        this.router.post(this.path + '/billing', this.newBilling);
         this.router.get(this.path, this.getOrders);
     }
 }

@@ -53,7 +53,7 @@ class Auth {
     if (!validPassword)
       return res.status(400).send('Invalid email and/or password');
 
-    const token = await services.getToken(user.id);
+    const token = await services.getToken(user);
     res.send(token);
   };
 
@@ -65,10 +65,10 @@ class Auth {
       const user = await services.findOauthUser(req.user.email);
       if (!user) {
         const newUser = await services.createGoogleUser(req.user);
-        const newUserToken = await services.getToken(newUser.id);
+        const newUserToken = await services.getToken(newUser);
         res.send(newUserToken);
       } else if (user) {
-        const token = await services.getToken(user.id);
+        const token = await services.getToken(user);
         res.send(token);
       }
     } catch (e) {

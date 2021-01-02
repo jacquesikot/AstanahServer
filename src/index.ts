@@ -1,6 +1,14 @@
 import { PORT } from './constants';
 import App from './config/appServer';
-import { Home, Products, Categories, Auth, Users, Orders } from './controllers';
+import {
+  Home,
+  Products,
+  Categories,
+  Auth,
+  Users,
+  Orders,
+  Billing,
+} from './controllers';
 
 const app = new App(
   [
@@ -10,6 +18,7 @@ const app = new App(
     new Auth(),
     new Users(),
     new Orders(),
+    new Billing(),
   ],
   PORT
 );

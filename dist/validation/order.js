@@ -10,7 +10,7 @@ const validateOrder = (order) => {
         payment_method: joi_1.default.string().min(3).max(15).required(),
         set_paid: joi_1.default.boolean().required(),
         billing_id: joi_1.default.number().required(),
-        products: joi_1.default.object(),
+        products: joi_1.default.array(),
     });
     return schema.validate(order);
 };

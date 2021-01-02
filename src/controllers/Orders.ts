@@ -13,9 +13,9 @@ class Orders {
     this.intializeRoutes();
   }
 
+  // add auth middleware
   private intializeRoutes() {
     this.router.post(this.path, this.newOrder);
-    this.router.post(this.path + '/billing', this.newBilling);
     this.router.get(this.path, this.getOrders);
   }
 
@@ -35,18 +35,6 @@ class Orders {
     try {
       const orders = await orderServices.getOrders();
       res.send(orders);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  private newBilling: RequestHandler = async (req, res) => {
-    try {
-      //   const { error } = validateOrder(req.body);
-      //   if (error) res.status(400).send(error.details[0].message);
-
-      const billing = await orderServices.newBilling(req.body);
-      res.send(billing);
     } catch (e) {
       console.log(e);
     }

@@ -50,7 +50,7 @@ class Auth {
             const validPassword = yield services.validatePassword(req.body.password, user.password);
             if (!validPassword)
                 return res.status(400).send('Invalid email and/or password');
-            const token = yield services.getToken(user.id);
+            const token = yield services.getToken(user);
             res.send(token);
         });
         this.loginGoogleUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -61,11 +61,11 @@ class Auth {
                 const user = yield services.findOauthUser(req.user.email);
                 if (!user) {
                     const newUser = yield services.createGoogleUser(req.user);
-                    const newUserToken = yield services.getToken(newUser.id);
+                    const newUserToken = yield services.getToken(newUser);
                     res.send(newUserToken);
                 }
                 else if (user) {
-                    const token = yield services.getToken(user.id);
+                    const token = yield services.getToken(user);
                     res.send(token);
                 }
             }
