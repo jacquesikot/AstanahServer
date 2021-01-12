@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default class BillingServices {
   public async newBilling(billing_props: IBilling) {
     try {
-      const billing = await prisma.app_billing_address.create({
+      const billing = await prisma.app_user_billing.create({
         data: {
           app_users: {
             connect: { id: billing_props.user_id },
@@ -19,6 +19,7 @@ export default class BillingServices {
           postcode: billing_props.postcode,
           country: billing_props.country,
           phone: billing_props.phone,
+          created_at: Date.now().toString(),
         },
       });
       return billing;
@@ -29,7 +30,7 @@ export default class BillingServices {
 
   public async getUserBilling(user_id: number) {
     try {
-      const billings = await prisma.app_billing_address.findMany({
+      const billings = await prisma.app_user_billing.findMany({
         where: {
           user_id: user_id,
         },
@@ -42,7 +43,7 @@ export default class BillingServices {
 
   public async deleteBilling(billing_id: number) {
     try {
-      const deletedBilling = await prisma.app_billing_address.delete({
+      const deletedBilling = await prisma.app_user_billing.delete({
         where: {
           id: billing_id,
         },

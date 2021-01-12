@@ -34,7 +34,7 @@ class User {
       const token = await services.getToken(response);
       res.header('x-auth-token', token).send(response);
     } catch (e) {
-      console.log(e);
+      res.status(500).send('An unexpected error occured.');
     }
   };
 

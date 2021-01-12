@@ -11,63 +11,59 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-class BillingServices {
-    newBilling(billing_props) {
+class PaymentCardServices {
+    createCard(card_details) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { user_id, card_number, card_holder_name, card_exp_date, } = card_details;
             try {
-                const billing = yield prisma.app_user_billing.create({
+                const newCard = yield prisma.app_user_cards.create({
                     data: {
                         app_users: {
-                            connect: { id: billing_props.user_id },
+                            connect: { id: user_id },
                         },
-                        first_name: billing_props.first_name,
-                        last_name: billing_props.last_name,
-                        address: billing_props.address,
-                        city: billing_props.city,
-                        state: billing_props.state,
-                        postcode: billing_props.postcode,
-                        country: billing_props.country,
-                        phone: billing_props.phone,
+                        card_number,
+                        card_holder_name,
+                        card_exp_date: Number(card_exp_date),
                         created_at: Date.now().toString(),
                     },
                 });
-                return billing;
+                return newCard;
             }
-            catch (e) {
-                console.error(e);
-            }
-        });
-    }
-    getUserBilling(user_id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const billings = yield prisma.app_user_billing.findMany({
-                    where: {
-                        user_id: user_id,
-                    },
-                });
-                return billings;
-            }
-            catch (e) {
-                console.error(e);
+            catch (error) {
+                console.log(error);
             }
         });
     }
-    deleteBilling(billing_id) {
+    getCards(user_id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deletedBilling = yield prisma.app_user_billing.delete({
+                const cards = yield prisma.app_user_cards.findMany({
                     where: {
-                        id: billing_id,
+                        user_id,
                     },
                 });
-                return deletedBilling;
+                return cards;
             }
-            catch (e) {
-                console.error(e);
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    deleteCard(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const deletedCard = yield prisma.app_user_cards.delete({
+                    where: {
+                        id,
+                    },
+                });
+                return deletedCard;
+            }
+            catch (error) {
+                console.log(error);
             }
         });
     }
 }
-exports.default = BillingServices;
-//# sourceMappingURL=BillingServices.js.map
+exports.default = PaymentCardServices;
+//# sourceMappingURL=PaymentCardServices.js.map

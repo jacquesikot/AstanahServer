@@ -48,7 +48,7 @@ class Auth {
 
     const validPassword = await services.validatePassword(
       req.body.password,
-      user.password
+      user.password!
     );
     if (!validPassword)
       return res.status(400).send('Invalid email and/or password');

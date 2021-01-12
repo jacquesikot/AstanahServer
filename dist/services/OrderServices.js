@@ -27,7 +27,7 @@ class OrderServices {
     }
     newOrder(order_props) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { user_id, billing_id, payment_method, set_paid, products, } = order_props;
+            const { user_id, billing_id, payment_method, set_paid, products, total, status, } = order_props;
             const order = yield prisma.app_orders.create({
                 data: {
                     payment_method,
@@ -35,23 +35,23 @@ class OrderServices {
                     app_users: {
                         connect: { id: user_id },
                     },
-                    app_billing_address: {
+                    app_user_billing: {
                         connect: { id: billing_id },
                     },
+                    status,
+                    total,
+                    created_at: Date.now().toString(),
                 },
             });
             products.map((p) => __awaiter(this, void 0, void 0, function* () {
                 yield prisma.app_order_details.create({
                     data: {
-                        quantity: p.quantity,
+                        quantity: p.count.toString(),
                         app_products: {
-                            connect: { id: p.product_id },
+                            connect: { id: p.id },
                         },
                         app_orders: {
                             connect: { id: order.id },
-                        },
-                        app_users: {
-                            connect: { id: order_props.user_id },
                         },
                     },
                 });

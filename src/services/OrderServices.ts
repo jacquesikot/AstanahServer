@@ -14,7 +14,6 @@ export default class OrderServices {
     }
   }
 
-  // new order should take a timestamp
   public async newOrder(order_props: IOrder) {
     const {
       user_id,
@@ -22,6 +21,8 @@ export default class OrderServices {
       payment_method,
       set_paid,
       products,
+      total,
+      status,
     } = order_props;
     const order = await prisma.app_orders.create({
       data: {
@@ -30,24 +31,24 @@ export default class OrderServices {
         app_users: {
           connect: { id: user_id },
         },
-        app_billing_address: {
+        app_user_billing: {
           connect: { id: billing_id },
         },
+        status,
+        total,
+        created_at: Date.now().toString(),
       },
     });
 
     products.map(async (p) => {
       await prisma.app_order_details.create({
         data: {
-          quantity: p.quantity,
+          quantity: p.count.toString(),
           app_products: {
-            connect: { id: p.product_id },
+            connect: { id: p.id },
           },
           app_orders: {
             connect: { id: order.id },
-          },
-          app_users: {
-            connect: { id: order_props.user_id },
           },
         },
       });

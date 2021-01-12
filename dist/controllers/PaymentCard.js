@@ -29,50 +29,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const validation_1 = require("../validation");
 const services_1 = require("../services");
-const middlewares_1 = require("../middlewares");
-const services = new services_1.UserServices();
-class User {
+const validation_1 = require("../validation");
+const paymentCardService = new services_1.PaymentCardServices();
+class PaymentCard {
     constructor() {
-        this.path = '/api/users';
+        this.path = '/api/paymentcard';
         this.router = express.Router();
-        this.addUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getCards = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const { error } = validation_1.validateUser(req.body);
+                const cards = yield paymentCardService.getCards(Number(req.query.user_id));
+                res.send(cards);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+        this.addCards = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { error } = validation_1.validatePaymentCard(req.body);
                 if (error)
-                    return res.status(400).send(error.details[0].message);
-                let user = yield services.findUser(req.body);
-                if (user)
-                    return res.status(400).send('User already registered');
-                const response = yield services.createUser(req.body);
-                const token = yield services.getToken(response);
-                res.header('x-auth-token', token).send(response);
+                    return res.status(401).send(error.details[0].message);
+                const newCard = yield paymentCardService.createCard(req.body);
+                if (!newCard)
+                    res.status(500).send('Error adding card to database');
+                res.send(newCard);
             }
-            catch (e) {
-                res.status(500).send('An unexpected error occured.');
+            catch (error) {
+                console.log(error);
             }
         });
-        this.getUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield services.findUserById(req.user.id);
-            res.send(user);
-        });
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.deleteCard = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield services.updateUser(req.body);
-                res.send(user);
+                const deletedCard = yield paymentCardService.deleteCard(Number(req.query.id));
+                res.send(deletedCard);
             }
-            catch (e) {
-                console.error(e);
+            catch (error) {
+                console.log(error);
             }
         });
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.post(this.path, this.addUser);
-        this.router.get(this.path, middlewares_1.auth, this.getUser);
-        this.router.post(this.path + `/update`, middlewares_1.auth, this.updateUser);
+        this.router.get(this.path, this.getCards);
+        this.router.post(this.path, this.addCards);
+        this.router.delete(this.path, this.deleteCard);
     }
 }
-exports.default = User;
-//# sourceMappingURL=Users.js.map
+exports.default = PaymentCard;
+//# sourceMappingURL=PaymentCard.js.map

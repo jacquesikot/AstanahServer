@@ -17,7 +17,7 @@ class ProductServices {
             const products = yield prisma.app_products.findMany({
                 take: 20,
                 where: {
-                    Regular_price: {
+                    regular_price: {
                         gt: 1,
                     },
                 },
@@ -32,18 +32,12 @@ class ProductServices {
             const products = yield prisma.app_products.findMany({
                 take: 20,
                 where: {
-                    OR: [
-                        {
-                            Title: {
-                                contains: searchParam,
-                            },
-                        },
-                        {
-                            Categories: {
-                                contains: searchParam,
-                            },
-                        },
-                    ],
+                    title: {
+                        contains: searchParam,
+                    },
+                    regular_price: {
+                        gt: 1,
+                    },
                 },
             });
             if (!products)
@@ -56,8 +50,25 @@ class ProductServices {
             const products = yield prisma.app_products.findMany({
                 take: 20,
                 where: {
-                    Categories: {
+                    categories: {
                         contains: categoryName.toLowerCase(),
+                    },
+                    regular_price: {
+                        gt: 1,
+                    },
+                },
+            });
+            if (!products)
+                return [];
+            return products;
+        });
+    }
+    filterSale() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const products = yield prisma.app_products.findMany({
+                where: {
+                    sale_price: {
+                        gt: 1,
                     },
                 },
             });

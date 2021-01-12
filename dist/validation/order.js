@@ -8,9 +8,11 @@ const validateOrder = (order) => {
     const schema = joi_1.default.object({
         user_id: joi_1.default.number().min(1).required(),
         payment_method: joi_1.default.string().min(3).max(15).required(),
-        set_paid: joi_1.default.boolean().required(),
+        set_paid: joi_1.default.number().required(),
         billing_id: joi_1.default.number().required(),
         products: joi_1.default.array(),
+        status: joi_1.default.string().min(3).required(),
+        total: joi_1.default.string().required(),
     });
     return schema.validate(order);
 };

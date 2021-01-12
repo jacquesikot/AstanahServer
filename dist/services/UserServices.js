@@ -83,9 +83,10 @@ class UserService {
                 let user = yield prisma.app_users.create({
                     data: {
                         first_name: user_params.first_name,
-                        last_name: user_params.last_name,
+                        last_name: user_params.last_name || '',
                         email: user_params.email,
                         password: user_params.password,
+                        created_at: Date.now().toString(),
                     },
                 });
                 return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
@@ -108,6 +109,7 @@ class UserService {
                         email: email,
                         google_id: id,
                         password,
+                        created_at: Date.now().toString(),
                     },
                 });
                 return _.pick(user, ['id', 'first_name', 'last_name', 'email']);

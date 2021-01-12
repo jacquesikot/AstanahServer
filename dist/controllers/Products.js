@@ -12,9 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const services_1 = require("../services");
 const config_1 = require("../config");
-const middlewares_1 = require("../middlewares");
 const log = require('debug')('app:log');
-const cache = new middlewares_1.Cache();
 const productService = new services_1.ProductServices();
 class Products {
     constructor() {
@@ -23,14 +21,12 @@ class Products {
         this.getProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const query = req.query;
-                if (query.category) {
-                    const searchString = query.category.toString();
-                    const products = yield productService.filterCategory(searchString);
+                if (query.searchBy) {
+                    const products = yield productService.searchProducts(query.searchBy.toString());
                     res.send(products);
                 }
-                else if (query.searchBy) {
-                    const searchString = query.searchBy.toString();
-                    const products = yield productService.searchProducts(searchString);
+                else if (query.category) {
+                    const products = yield productService.filterCategory(query.category.toString());
                     res.send(products);
                 }
                 else {
@@ -44,10 +40,22 @@ class Products {
                 log(e);
             }
         });
+        this.getSaleProducts = (_req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const saleProducts = yield productService.filterSale();
+                if (saleProducts === [])
+                    res.status(404).send('No Sale Products');
+                res.status(200).send(saleProducts);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.get(this.path, cache.products, this.getProducts);
+        this.router.get(this.path, this.getProducts);
+        this.router.get(this.path + '/sale', this.getSaleProducts);
     }
 }
 exports.default = Products;

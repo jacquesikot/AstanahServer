@@ -21,7 +21,7 @@ class Orders {
 
   private newOrder: RequestHandler = async (req, res) => {
     try {
-      const { error } = validateOrder(req.body);
+      const { error } = validateOrder(req.body); // redo this validation to match new schema
       if (error) res.status(400).send(error.details[0].message);
 
       const order = await orderServices.newOrder(req.body);

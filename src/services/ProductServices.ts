@@ -7,7 +7,7 @@ export default class ProductServices {
     const products = await prisma.app_products.findMany({
       take: 20,
       where: {
-        Regular_price: {
+        regular_price: {
           gt: 1,
         },
       },
@@ -20,20 +20,15 @@ export default class ProductServices {
     const products = await prisma.app_products.findMany({
       take: 20,
       where: {
-        OR: [
-          {
-            Title: {
-              contains: searchParam,
-            },
-          },
-          {
-            Categories: {
-              contains: searchParam,
-            },
-          },
-        ],
+        title: {
+          contains: searchParam,
+        },
+        regular_price: {
+          gt: 1,
+        },
       },
     });
+
     if (!products) return [];
     return products;
   }
@@ -42,8 +37,23 @@ export default class ProductServices {
     const products = await prisma.app_products.findMany({
       take: 20,
       where: {
-        Categories: {
+        categories: {
           contains: categoryName.toLowerCase(),
+        },
+        regular_price: {
+          gt: 1,
+        },
+      },
+    });
+    if (!products) return [];
+    return products;
+  }
+
+  public async filterSale() {
+    const products = await prisma.app_products.findMany({
+      where: {
+        sale_price: {
+          gt: 1,
         },
       },
     });

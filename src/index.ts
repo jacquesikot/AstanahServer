@@ -8,6 +8,7 @@ import {
   Users,
   Orders,
   Billing,
+  PaymentCard,
 } from './controllers';
 
 const app = new App(
@@ -19,6 +20,7 @@ const app = new App(
     new Users(),
     new Orders(),
     new Billing(),
+    new PaymentCard(),
   ],
   PORT
 );

@@ -54,9 +54,10 @@ export default class UserService {
       let user = await prisma.app_users.create({
         data: {
           first_name: user_params.first_name,
-          last_name: user_params.last_name,
+          last_name: user_params.last_name || '',
           email: user_params.email,
           password: user_params.password,
+          created_at: Date.now().toString(),
         },
       });
       return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
@@ -79,6 +80,7 @@ export default class UserService {
           email: email,
           google_id: id,
           password,
+          created_at: Date.now().toString(),
         },
       });
       return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
