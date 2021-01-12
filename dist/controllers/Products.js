@@ -23,6 +23,8 @@ class Products {
                 const query = req.query;
                 if (query.searchBy) {
                     const products = yield productService.searchProducts(query.searchBy.toString());
+                    if (products === [])
+                        res.status(400).send([]);
                     res.send(products);
                 }
                 else if (query.category) {

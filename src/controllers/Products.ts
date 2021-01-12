@@ -29,6 +29,7 @@ class Products {
         const products = await productService.searchProducts(
           query.searchBy.toString()
         );
+        if (products === []) res.status(400).send([]);
         res.send(products);
       } else if (query.category) {
         const products = await productService.filterCategory(
