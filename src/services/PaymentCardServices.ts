@@ -19,7 +19,7 @@ export default class PaymentCardServices {
           },
           card_number,
           card_holder_name,
-          card_exp_date: Number(card_exp_date),
+          card_exp_date: card_exp_date,
           created_at: Date.now().toString(),
         },
       });
