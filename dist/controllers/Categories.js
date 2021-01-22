@@ -39,11 +39,12 @@ class Categories {
         this.path = '/api/categories';
         this.router = express.Router();
         this.getCategories = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const cacheIdentifier = `${this.path} + ${req.query}`;
             if (req.query) {
                 try {
                     const categories = yield categoryServices.getCategories(Number(req.query.take));
                     const redisData = JSON.stringify(categories);
-                    config_1.redisClient.setex(`${this.path} + ${req.query}`, 3600, redisData);
+                    config_1.redisClient.setex(cacheIdentifier, 3600, redisData);
                     res.send(categories);
                 }
                 catch (e) {

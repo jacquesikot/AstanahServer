@@ -11,9 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("../config");
 class Cache {
-    categories(_req, res, next) {
+    categories(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            config_1.redisClient.get('categories', (err, data) => {
+            const path = `/api/categories + ${req.query}`;
+            config_1.redisClient.get(path, (err, data) => {
                 if (err)
                     throw err;
                 if (data !== null) {

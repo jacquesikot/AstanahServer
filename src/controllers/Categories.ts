@@ -21,13 +21,14 @@ class Categories {
   }
 
   private getCategories = async (req: Request, res: Response) => {
+    const cacheIdentifier = `${this.path} + ${req.query}`;
     if (req.query) {
       try {
         const categories = await categoryServices.getCategories(
           Number(req.query.take)
         );
         const redisData = JSON.stringify(categories);
-        redisClient.setex(`${this.path} + ${req.query}`, 3600, redisData);
+        redisClient.setex(cacheIdentifier, 3600, redisData);
         res.send(categories);
       } catch (e) {
         console.log(e);
