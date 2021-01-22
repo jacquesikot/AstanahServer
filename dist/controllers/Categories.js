@@ -43,7 +43,7 @@ class Categories {
                 try {
                     const categories = yield categoryServices.getCategories(Number(req.query.take));
                     const redisData = JSON.stringify(categories);
-                    config_1.redisClient.setex('categories', 3600, redisData);
+                    config_1.redisClient.setex(`this.path + ${req.query}`, 3600, redisData);
                     res.send(categories);
                 }
                 catch (e) {
