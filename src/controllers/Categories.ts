@@ -20,14 +20,18 @@ class Categories {
     this.router.get(this.path, cache.categories, this.getCategories);
   }
 
-  private getCategories = async (_req: Request, res: Response) => {
-    try {
-      const categories = await categoryServices.getCategories();
-      const redisData = JSON.stringify(categories);
-      redisClient.setex('categories', 3600, redisData);
-      res.send(categories);
-    } catch (e) {
-      console.log(e);
+  private getCategories = async (req: Request, res: Response) => {
+    if (req.query) {
+      try {
+        const categories = await categoryServices.getCategories(
+          Number(req.query.take)
+        );
+        const redisData = JSON.stringify(categories);
+        redisClient.setex('categories', 3600, redisData);
+        res.send(categories);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 }

@@ -38,15 +38,17 @@ class Categories {
     constructor() {
         this.path = '/api/categories';
         this.router = express.Router();
-        this.getCategories = (_req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const categories = yield categoryServices.getCategories();
-                const redisData = JSON.stringify(categories);
-                config_1.redisClient.setex('categories', 3600, redisData);
-                res.send(categories);
-            }
-            catch (e) {
-                console.log(e);
+        this.getCategories = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            if (req.query) {
+                try {
+                    const categories = yield categoryServices.getCategories(Number(req.query.take));
+                    const redisData = JSON.stringify(categories);
+                    config_1.redisClient.setex('categories', 3600, redisData);
+                    res.send(categories);
+                }
+                catch (e) {
+                    console.log(e);
+                }
             }
         });
         this.intializeRoutes();
