@@ -12,7 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const services_1 = require("../services");
 const config_1 = require("../config");
+const middlewares_1 = require("../middlewares");
 const log = require('debug')('app:log');
+const cache = new middlewares_1.Cache();
 const productService = new services_1.ProductServices();
 class Products {
     constructor() {
@@ -32,9 +34,10 @@ class Products {
                     res.send(products);
                 }
                 else {
-                    const products = yield productService.getProducts();
+                    const cacheIdentifier = `/api/products + ${req.query.take}`;
+                    const products = yield productService.getProducts(Number(req.query.take));
                     const redisData = JSON.stringify(products);
-                    config_1.redisClient.setex('products', 3600, redisData);
+                    config_1.redisClient.setex(cacheIdentifier, 3600, redisData);
                     res.send(products);
                 }
             }
@@ -42,11 +45,14 @@ class Products {
                 log(e);
             }
         });
-        this.getSaleProducts = (_req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getSaleProducts = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const cacheIdentifier = `/api/products/sale + ${req.query.take}`;
             try {
-                const saleProducts = yield productService.filterSale();
+                const saleProducts = yield productService.filterSale(Number(req.query.take));
                 if (saleProducts === [])
                     res.status(404).send('No Sale Products');
+                const redisData = JSON.stringify(saleProducts);
+                config_1.redisClient.setex(cacheIdentifier, 3600, redisData);
                 res.status(200).send(saleProducts);
             }
             catch (error) {
@@ -57,7 +63,7 @@ class Products {
     }
     intializeRoutes() {
         this.router.get(this.path, this.getProducts);
-        this.router.get(this.path + '/sale', this.getSaleProducts);
+        this.router.get(this.path + '/sale', cache.saleProducts, this.getSaleProducts);
     }
 }
 exports.default = Products;

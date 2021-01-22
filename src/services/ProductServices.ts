@@ -3,9 +3,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export default class ProductServices {
-  public async getProducts() {
+  public async getProducts(take?: number) {
     const products = await prisma.app_products.findMany({
-      take: 20,
+      take: take ? take : 20,
       where: {
         regular_price: {
           gt: 1,
@@ -16,9 +16,9 @@ export default class ProductServices {
     return products;
   }
 
-  public async searchProducts(searchParam: string) {
+  public async searchProducts(searchParam: string, take?: number) {
     const products = await prisma.app_products.findMany({
-      take: 20,
+      take: take ? take : 20,
       where: {
         title: {
           contains: searchParam,
@@ -33,9 +33,9 @@ export default class ProductServices {
     return products;
   }
 
-  public async filterCategory(categoryName: string) {
+  public async filterCategory(categoryName: string, take?: number) {
     const products = await prisma.app_products.findMany({
-      take: 20,
+      take: take ? take : 20,
       where: {
         categories: {
           contains: categoryName.toLowerCase(),
@@ -49,8 +49,9 @@ export default class ProductServices {
     return products;
   }
 
-  public async filterSale() {
+  public async filterSale(take?: number) {
     const products = await prisma.app_products.findMany({
+      take: take ? take : 20,
       where: {
         sale_price: {
           gt: 1,

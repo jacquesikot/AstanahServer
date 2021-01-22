@@ -21,7 +21,7 @@ class Categories {
   }
 
   private getCategories = async (req: Request, res: Response) => {
-    const cacheIdentifier = `${this.path} + ${req.query}`;
+    const cacheIdentifier = `${this.path} + ${req.query.take}`;
     if (req.query) {
       try {
         const categories = await categoryServices.getCategories(

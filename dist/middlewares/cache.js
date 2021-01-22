@@ -13,7 +13,7 @@ const config_1 = require("../config");
 class Cache {
     categories(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const path = `/api/categories + ${req.query}`;
+            const path = `/api/categories + ${req.query.take}`;
             config_1.redisClient.get(path, (err, data) => {
                 if (err)
                     throw err;
@@ -26,9 +26,25 @@ class Cache {
             });
         });
     }
-    products(_req, res, next) {
+    products(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            config_1.redisClient.get('products', (err, data) => {
+            const path = `/api/products + ${req.query.take}`;
+            config_1.redisClient.get(path, (err, data) => {
+                if (err)
+                    throw err;
+                if (data !== null) {
+                    res.send(JSON.parse(data));
+                }
+                else {
+                    next();
+                }
+            });
+        });
+    }
+    saleProducts(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const path = `/api/products/sale + ${req.query.take}`;
+            config_1.redisClient.get(path, (err, data) => {
                 if (err)
                     throw err;
                 if (data !== null) {

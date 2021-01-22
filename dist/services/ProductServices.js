@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class ProductServices {
-    getProducts() {
+    getProducts(take) {
         return __awaiter(this, void 0, void 0, function* () {
             const products = yield prisma.app_products.findMany({
-                take: 20,
+                take: take ? take : 20,
                 where: {
                     regular_price: {
                         gt: 1,
@@ -27,10 +27,10 @@ class ProductServices {
             return products;
         });
     }
-    searchProducts(searchParam) {
+    searchProducts(searchParam, take) {
         return __awaiter(this, void 0, void 0, function* () {
             const products = yield prisma.app_products.findMany({
-                take: 20,
+                take: take ? take : 20,
                 where: {
                     title: {
                         contains: searchParam,
@@ -45,10 +45,10 @@ class ProductServices {
             return products;
         });
     }
-    filterCategory(categoryName) {
+    filterCategory(categoryName, take) {
         return __awaiter(this, void 0, void 0, function* () {
             const products = yield prisma.app_products.findMany({
-                take: 20,
+                take: take ? take : 20,
                 where: {
                     categories: {
                         contains: categoryName.toLowerCase(),
@@ -63,9 +63,10 @@ class ProductServices {
             return products;
         });
     }
-    filterSale() {
+    filterSale(take) {
         return __awaiter(this, void 0, void 0, function* () {
             const products = yield prisma.app_products.findMany({
+                take: take ? take : 20,
                 where: {
                     sale_price: {
                         gt: 1,

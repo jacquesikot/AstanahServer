@@ -39,7 +39,7 @@ class Categories {
         this.path = '/api/categories';
         this.router = express.Router();
         this.getCategories = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const cacheIdentifier = `${this.path} + ${req.query}`;
+            const cacheIdentifier = `${this.path} + ${req.query.take}`;
             if (req.query) {
                 try {
                     const categories = yield categoryServices.getCategories(Number(req.query.take));
