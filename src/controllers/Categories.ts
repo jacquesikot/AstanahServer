@@ -27,7 +27,7 @@ class Categories {
           Number(req.query.take)
         );
         const redisData = JSON.stringify(categories);
-        redisClient.setex(`this.path + ${req.query}`, 3600, redisData);
+        redisClient.setex(`${this.path} + ${req.query}`, 3600, redisData);
         res.send(categories);
       } catch (e) {
         console.log(e);
