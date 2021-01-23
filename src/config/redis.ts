@@ -1,6 +1,8 @@
 import redis from 'redis';
-import { REDISCLOUD_URL } from '../constants';
+import { REDISCLOUD_URL, REDIS_PORT, __PROD__ } from '../constants';
 
-const redisClient = redis.createClient(REDISCLOUD_URL);
+const REDIS = __PROD__ ? REDISCLOUD_URL : REDIS_PORT;
+
+const redisClient = redis.createClient(REDIS);
 
 export default redisClient;

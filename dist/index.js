@@ -15,6 +15,7 @@ const app = new appServer_1.default([
     new controllers_1.Orders(),
     new controllers_1.Billing(),
     new controllers_1.PaymentCard(),
+    new controllers_1.Favorites(),
 ], constants_1.PORT);
 if (!process.env.JWT_KEY) {
     console.error('FATAL ERROR: jwtPrivateKey is not defined.');

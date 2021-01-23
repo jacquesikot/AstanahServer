@@ -9,6 +9,7 @@ import {
   Orders,
   Billing,
   PaymentCard,
+  Favorites,
 } from './controllers';
 
 const app = new App(
@@ -21,6 +22,7 @@ const app = new App(
     new Orders(),
     new Billing(),
     new PaymentCard(),
+    new Favorites(),
   ],
   PORT
 );

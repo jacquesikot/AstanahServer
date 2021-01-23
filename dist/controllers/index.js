@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PaymentCard = exports.Billing = exports.Orders = exports.Users = exports.Auth = exports.Categories = exports.Products = exports.Home = void 0;
+exports.Favorites = exports.PaymentCard = exports.Billing = exports.Orders = exports.Users = exports.Auth = exports.Categories = exports.Products = exports.Home = void 0;
 var Home_1 = require("./Home");
 Object.defineProperty(exports, "Home", { enumerable: true, get: function () { return __importDefault(Home_1).default; } });
 var Products_1 = require("./Products");
@@ -20,4 +20,6 @@ var Billing_1 = require("./Billing");
 Object.defineProperty(exports, "Billing", { enumerable: true, get: function () { return __importDefault(Billing_1).default; } });
 var PaymentCard_1 = require("./PaymentCard");
 Object.defineProperty(exports, "PaymentCard", { enumerable: true, get: function () { return __importDefault(PaymentCard_1).default; } });
+var Favorites_1 = require("./Favorites");
+Object.defineProperty(exports, "Favorites", { enumerable: true, get: function () { return __importDefault(Favorites_1).default; } });
 //# sourceMappingURL=index.js.map
