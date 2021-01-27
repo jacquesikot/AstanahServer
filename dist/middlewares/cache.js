@@ -56,21 +56,6 @@ class Cache {
             });
         });
     }
-    favorites(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const path = `/api/favorites + ${req.query.user_id}`;
-            config_1.redisClient.get(path, (err, data) => {
-                if (err)
-                    throw err;
-                if (data !== null) {
-                    res.send(JSON.parse(data));
-                }
-                else {
-                    next();
-                }
-            });
-        });
-    }
 }
 exports.default = Cache;
 //# sourceMappingURL=cache.js.map
