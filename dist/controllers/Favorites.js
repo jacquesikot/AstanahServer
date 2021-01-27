@@ -10,9 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const config_1 = require("../config");
 const services_1 = require("../services");
+const middlewares_1 = require("../middlewares");
+const cache = new middlewares_1.Cache();
 const favoriteServices = new services_1.FavoriteServices();
 class Favorite {
     constructor() {
@@ -29,8 +30,11 @@ class Favorite {
             }
         });
         this.getFavorites = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const cacheIdentifier = `/api/favorites + ${req.query.user_id}`;
             try {
                 const favorites = yield favoriteServices.getFavorites(Number(req.query.user_id));
+                const redisData = JSON.stringify(favorites);
+                config_1.redisClient.setex(cacheIdentifier, 3600, redisData);
                 res.send(favorites);
             }
             catch (e) {
@@ -52,7 +56,7 @@ class Favorite {
     }
     intializeRoutes() {
         this.router.post(this.path, this.addFavorite);
-        this.router.get(this.path, this.getFavorites);
+        this.router.get(this.path, cache.favorites, this.getFavorites);
         this.router.delete(this.path, this.deleteFavorite);
     }
 }

@@ -38,4 +38,16 @@ export default class Cache {
       }
     });
   }
+
+  public async favorites(req: Request, res: Response, next: NextFunction) {
+    const path = `/api/favorites + ${req.query.user_id}`;
+    redisClient.get(path, (err: any, data: any) => {
+      if (err) throw err;
+      if (data !== null) {
+        res.send(JSON.parse(data));
+      } else {
+        next();
+      }
+    });
+  }
 }
