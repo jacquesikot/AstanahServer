@@ -50,7 +50,7 @@ class ProductServices {
             const products = yield prisma.app_products.findMany({
                 take: take ? take : 20,
                 where: {
-                    categories: {
+                    gallery: {
                         contains: categoryName.toLowerCase(),
                     },
                     regular_price: {

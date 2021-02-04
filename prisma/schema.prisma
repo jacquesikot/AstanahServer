@@ -8,9 +8,10 @@ datasource db {
 }
 
 model app_categories {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   category_name String
   slug          String
+  search_text   String?
   created_at    String
 }
 

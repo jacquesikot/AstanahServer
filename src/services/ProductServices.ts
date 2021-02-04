@@ -37,7 +37,7 @@ export default class ProductServices {
     const products = await prisma.app_products.findMany({
       take: take ? take : 20,
       where: {
-        categories: {
+        gallery: {
           contains: categoryName.toLowerCase(),
         },
         regular_price: {
