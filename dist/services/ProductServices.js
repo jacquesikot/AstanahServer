@@ -30,7 +30,7 @@ class ProductServices {
     searchProducts(searchParam, take) {
         return __awaiter(this, void 0, void 0, function* () {
             const products = yield prisma.app_products.findMany({
-                take: take ? take : 20,
+                take: take ? take : 10000,
                 where: {
                     title: {
                         contains: searchParam,

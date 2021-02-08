@@ -29,50 +29,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const validation_1 = require("../validation");
-const services_1 = require("../services");
-const middlewares_1 = require("../middlewares");
-const services = new services_1.UserServices();
-class User {
+const NotificationsServices_1 = require("../services/NotificationsServices");
+class Notifications {
     constructor() {
-        this.path = '/api/users';
+        this.path = '/api/notifications';
         this.router = express.Router();
-        this.addUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.addToken = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const { error } = validation_1.validateUser(req.body);
-                if (error)
-                    return res.status(400).send(error.details[0].message);
-                let user = yield services.findUser(req.body);
-                if (user)
-                    return res.status(400).send('User already registered');
-                const response = yield services.createUser(req.body);
-                const token = yield services.getToken(response);
-                res.header('x-auth-token', token).send(response);
+                const tokenObject = yield NotificationsServices_1.storeToken(req.body);
+                if (!tokenObject)
+                    res.status(401);
+                res.send(tokenObject);
             }
-            catch (e) {
-                res.status(500).send('An unexpected error occured.');
-            }
-        });
-        this.getUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield services.findUserById(req.user.id);
-            res.send(user);
-        });
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield services.updateUser(req.body);
-                res.send(user);
-            }
-            catch (e) {
-                console.log(e);
+            catch (error) {
+                console.log('Error from add Notifications controller', error);
             }
         });
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.post(this.path, this.addUser);
-        this.router.get(this.path, middlewares_1.auth, this.getUser);
-        this.router.post(this.path + `/update`, middlewares_1.auth, this.updateUser);
+        this.router.post(this.path, this.addToken);
     }
 }
-exports.default = User;
-//# sourceMappingURL=Users.js.map
+exports.default = Notifications;
+//# sourceMappingURL=Notifications.js.map

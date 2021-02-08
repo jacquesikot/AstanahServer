@@ -50,7 +50,7 @@ class User {
       res.send(user);
       // console.log(user);
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   };
 }

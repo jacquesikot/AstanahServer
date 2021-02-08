@@ -14,7 +14,7 @@ const prisma = new client_1.PrismaClient();
 class PaymentCardServices {
     createCard(card_details) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { user_id, card_number, card_holder_name, card_exp_date, } = card_details;
+            const { user_id, card_number, card_holder_name, card_exp_date, cvv, } = card_details;
             try {
                 const newCard = yield prisma.app_user_cards.create({
                     data: {
@@ -23,7 +23,8 @@ class PaymentCardServices {
                         },
                         card_number,
                         card_holder_name,
-                        card_exp_date: card_exp_date,
+                        card_exp_date,
+                        cvv,
                         created_at: Date.now().toString(),
                     },
                 });

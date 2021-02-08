@@ -16,6 +16,8 @@ const app = new appServer_1.default([
     new controllers_1.Billing(),
     new controllers_1.PaymentCard(),
     new controllers_1.Favorites(),
+    new controllers_1.Notifications(),
+    new controllers_1.FlutterwaveCardPayment(),
 ], constants_1.PORT);
 if (!process.env.JWT_KEY) {
     console.error('FATAL ERROR: jwtPrivateKey is not defined.');

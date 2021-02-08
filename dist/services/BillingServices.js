@@ -68,6 +68,33 @@ class BillingServices {
             }
         });
     }
+    updateBilling(billing_props) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, user_id, first_name, last_name, address, city, state, postcode, country, phone, } = billing_props;
+            try {
+                const response = yield prisma.app_user_billing.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        app_users: { connect: { id: user_id } },
+                        first_name,
+                        last_name,
+                        address,
+                        city,
+                        state,
+                        postcode,
+                        country,
+                        phone,
+                    },
+                });
+                return response;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
 }
 exports.default = BillingServices;
 //# sourceMappingURL=BillingServices.js.map

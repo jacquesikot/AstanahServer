@@ -53,4 +53,40 @@ export default class BillingServices {
       console.error(e);
     }
   }
+
+  public async updateBilling(billing_props: IBilling) {
+    const {
+      id,
+      user_id,
+      first_name,
+      last_name,
+      address,
+      city,
+      state,
+      postcode,
+      country,
+      phone,
+    } = billing_props;
+    try {
+      const response = await prisma.app_user_billing.update({
+        where: {
+          id,
+        },
+        data: {
+          app_users: { connect: { id: user_id } },
+          first_name,
+          last_name,
+          address,
+          city,
+          state,
+          postcode,
+          country,
+          phone,
+        },
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

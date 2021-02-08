@@ -47,7 +47,7 @@ class UserService {
                 return user;
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }
@@ -60,7 +60,7 @@ class UserService {
                 return user;
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }
@@ -71,7 +71,7 @@ class UserService {
                 return user;
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }
@@ -92,7 +92,7 @@ class UserService {
                 return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }
@@ -115,7 +115,7 @@ class UserService {
                 return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }
@@ -135,7 +135,7 @@ class UserService {
                 return user;
             }
             catch (e) {
-                console.error;
+                console.log(e);
             }
         });
     }
@@ -148,7 +148,7 @@ class UserService {
                 return true;
             }
             catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
     }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GOOGLE_CALLBACK_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.REDIS_PORT = exports.REDISCLOUD_URL = exports.JWT_KEY = exports.MONGODB_URI = exports.WOOCOMMERCEDB_URI = exports.PORT = exports.__PROD__ = void 0;
+exports.FLUTTERWAVE_SECRET = exports.GOOGLE_CALLBACK_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.REDIS_PORT = exports.REDISCLOUD_URL = exports.JWT_KEY = exports.MONGODB_URI = exports.WOOCOMMERCEDB_URI = exports.PORT = exports.__PROD__ = void 0;
 require("dotenv/config");
 exports.__PROD__ = process.env.NODE_ENV === 'production';
 exports.PORT = process.env.PORT;
@@ -24,4 +24,5 @@ exports.GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 exports.GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL
     ? process.env.GOOGLE_CALLBACK_URL
     : '';
+exports.FLUTTERWAVE_SECRET = process.env.FLUTTERWAVE_SECRET;
 //# sourceMappingURL=constants.js.map

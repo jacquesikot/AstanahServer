@@ -10,6 +10,8 @@ import {
   Billing,
   PaymentCard,
   Favorites,
+  Notifications,
+  FlutterwaveCardPayment,
 } from './controllers';
 
 const app = new App(
@@ -23,6 +25,8 @@ const app = new App(
     new Billing(),
     new PaymentCard(),
     new Favorites(),
+    new Notifications(),
+    new FlutterwaveCardPayment(),
   ],
   PORT
 );

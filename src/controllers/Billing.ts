@@ -18,6 +18,7 @@ class Billing {
     this.router.post(this.path, this.newBilling);
     this.router.get(this.path, this.getBilling);
     this.router.delete(this.path, this.deleteBilling);
+    this.router.post(this.path + `/update`, this.updateBilling);
   }
 
   private newBilling: RequestHandler = async (req, res) => {
@@ -54,6 +55,15 @@ class Billing {
     } catch (e) {
       console.log(e);
       res.status(501).send('An unexpected error occured.');
+    }
+  };
+
+  private updateBilling: RequestHandler = async (req, res) => {
+    try {
+      const updatedBilling = await billingServices.updateBilling(req.body);
+      res.send(updatedBilling);
+    } catch (error) {
+      console.log(error);
     }
   };
 }

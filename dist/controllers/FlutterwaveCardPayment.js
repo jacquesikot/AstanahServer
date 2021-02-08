@@ -29,50 +29,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const validation_1 = require("../validation");
+const apisauce_1 = require("apisauce");
 const services_1 = require("../services");
-const middlewares_1 = require("../middlewares");
-const services = new services_1.UserServices();
-class User {
+class FlutterwaveCardPayment {
     constructor() {
-        this.path = '/api/users';
+        this.path = '/api/cardpay';
         this.router = express.Router();
-        this.addUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { error } = validation_1.validateUser(req.body);
-                if (error)
-                    return res.status(400).send(error.details[0].message);
-                let user = yield services.findUser(req.body);
-                if (user)
-                    return res.status(400).send('User already registered');
-                const response = yield services.createUser(req.body);
-                const token = yield services.getToken(response);
-                res.header('x-auth-token', token).send(response);
-            }
-            catch (e) {
-                res.status(500).send('An unexpected error occured.');
-            }
+        this.flutterWaveApi = apisauce_1.create({
+            baseURL: 'https://api.flutterwave.com/v3/charges?type=card',
+            headers: {
+                Authorization: 'FLWSECK_TEST-701c6e97947fa72009a19de521678c6f-X',
+            },
         });
-        this.getUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield services.findUserById(req.user.id);
-            res.send(user);
-        });
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.pay = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield services.updateUser(req.body);
-                res.send(user);
+                const encryptedData = services_1.CardPayment.encrypt('FLWSECK_TEST76de52701f56', req.body.toString());
+                const response = yield this.flutterWaveApi.post('', encryptedData);
+                res.send(response.data);
             }
-            catch (e) {
-                console.log(e);
+            catch (error) {
+                console.log('Error from card pay controller', error);
             }
         });
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.post(this.path, this.addUser);
-        this.router.get(this.path, middlewares_1.auth, this.getUser);
-        this.router.post(this.path + `/update`, middlewares_1.auth, this.updateUser);
+        this.router.post(this.path, this.pay);
     }
 }
-exports.default = User;
-//# sourceMappingURL=Users.js.map
+exports.default = FlutterwaveCardPayment;
+//# sourceMappingURL=FlutterwaveCardPayment.js.map

@@ -10,6 +10,7 @@ export default class PaymentCardServices {
       card_number,
       card_holder_name,
       card_exp_date,
+      cvv,
     } = card_details;
     try {
       const newCard = await prisma.app_user_cards.create({
@@ -19,7 +20,8 @@ export default class PaymentCardServices {
           },
           card_number,
           card_holder_name,
-          card_exp_date: card_exp_date,
+          card_exp_date,
+          cvv,
           created_at: Date.now().toString(),
         },
       });

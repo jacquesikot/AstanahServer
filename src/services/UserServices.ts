@@ -23,7 +23,7 @@ export default class UserService {
       });
       return user;
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -34,7 +34,7 @@ export default class UserService {
       });
       return user;
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -43,7 +43,7 @@ export default class UserService {
       let user = await prisma.app_users.findOne({ where: { id: id } });
       return user;
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -62,7 +62,7 @@ export default class UserService {
       });
       return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -85,7 +85,7 @@ export default class UserService {
       });
       return _.pick(user, ['id', 'first_name', 'last_name', 'email']);
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -103,7 +103,7 @@ export default class UserService {
       });
       return user;
     } catch (e) {
-      console.error;
+      console.log(e);
     }
   }
 
@@ -113,7 +113,7 @@ export default class UserService {
       if (!validPassword) return false;
       return true;
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 

@@ -72,19 +72,20 @@ model app_user_likes {
 }
 
 model app_users {
-  id               Int                @id @default(autoincrement())
-  first_name       String
-  last_name        String
-  email            String             @unique
-  password         String?
-  google_id        String?
-  facebook_id      String?
-  created_at       String
-  updated_at       String?
-  app_orders       app_orders[]
-  app_user_billing app_user_billing[]
-  app_user_cards   app_user_cards[]
-  app_user_likes   app_user_likes[]
+  id                Int                 @id @default(autoincrement())
+  first_name        String
+  last_name         String
+  email             String              @unique
+  password          String?
+  google_id         String?
+  facebook_id       String?
+  created_at        String
+  updated_at        String?
+  app_notifications app_notifications[]
+  app_orders        app_orders[]
+  app_user_billing  app_user_billing[]
+  app_user_cards    app_user_cards[]
+  app_user_likes    app_user_likes[]
 
   @@index([email], name: "email")
 }
@@ -94,6 +95,7 @@ model app_user_cards {
   user_id          Int
   card_number      String
   card_holder_name String
+  cvv              String
   card_exp_date    String
   created_at       String
   updated_at       String?
@@ -121,20 +123,12 @@ model app_user_billing {
   @@index([user_id], name: "billing_user_id_idx")
 }
 
-model app_products_test {
-  ID                Int     @id @default(autoincrement())
-  Meta_thumbnail_id String?
-  Title             String?
-  Description       String?
-  Short_Desc        String?
-  Regular_price     Float?
-  Gallery           String?
-  Categories        String?
-  Sale_price        String?
-  Slug              String?
-}
+model app_notifications {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token      String
+  created_at String
+  app_users  app_users @relation(fields: [user_id], references: [id])
 
-model test_table {
-  id         Int    @id @default(autoincrement())
-  test_field String
+  @@index([user_id], name: "user_id_idx")
 }

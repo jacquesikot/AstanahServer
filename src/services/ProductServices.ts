@@ -18,7 +18,7 @@ export default class ProductServices {
 
   public async searchProducts(searchParam: string, take?: number) {
     const products = await prisma.app_products.findMany({
-      take: take ? take : 20,
+      take: take ? take : 10000,
       where: {
         title: {
           contains: searchParam,

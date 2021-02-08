@@ -4,4 +4,5 @@ export default interface IPaymentCards {
   card_number: string;
   card_holder_name: string;
   card_exp_date: string;
+  cvv: string;
 }

@@ -50,12 +50,22 @@ class Billing {
                 res.status(501).send('An unexpected error occured.');
             }
         });
+        this.updateBilling = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updatedBilling = yield billingServices.updateBilling(req.body);
+                res.send(updatedBilling);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
         this.intializeRoutes();
     }
     intializeRoutes() {
         this.router.post(this.path, this.newBilling);
         this.router.get(this.path, this.getBilling);
         this.router.delete(this.path, this.deleteBilling);
+        this.router.post(this.path + `/update`, this.updateBilling);
     }
 }
 exports.default = Billing;
