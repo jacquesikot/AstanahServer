@@ -2,9 +2,6 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import { create } from 'apisauce';
 
-import { FLUTTERWAVE_SECRET } from '../constants';
-import { CardPayment } from '../services';
-
 class FlutterwaveCardPayment {
   public path = '/api/cardpay';
   public router = express.Router();
@@ -18,7 +15,7 @@ class FlutterwaveCardPayment {
   }
 
   flutterWaveApi = create({
-    baseURL: 'https://api.flutterwave.com/v3/charges?type=card',
+    baseURL: 'https://api.flutterwave.com/v3/payments',
     headers: {
       Authorization: 'FLWSECK_TEST-701c6e97947fa72009a19de521678c6f-X',
     },
@@ -26,11 +23,23 @@ class FlutterwaveCardPayment {
 
   private pay = async (req: Request, res: Response) => {
     try {
-      const encryptedData = CardPayment.encrypt(
-        'FLWSECK_TEST76de52701f56',
-        req.body.toString()
-      );
-      const response = await this.flutterWaveApi.post('', encryptedData);
+      const data = {
+        tx_ref: `pRef-${Math.random()}`,
+        amount: req.body.amount,
+        currency: 'ZMW',
+        redirect_url: req.body.redirect_url,
+        payment_options: 'card, mobilemoneyzambia',
+        meta: {
+          consumer_id: req.body.consumer_id,
+          consumer_mac: req.body.consumer_mac,
+        },
+        customer: {
+          email: req.body.email,
+          phonenumber: req.body.phone_number,
+          name: req.body.name,
+        },
+      };
+      const response = await this.flutterWaveApi.post('', data);
       res.send(response.data);
     } catch (error) {
       console.log('Error from card pay controller', error);

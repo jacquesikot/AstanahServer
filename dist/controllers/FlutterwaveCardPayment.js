@@ -30,21 +30,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const apisauce_1 = require("apisauce");
-const services_1 = require("../services");
 class FlutterwaveCardPayment {
     constructor() {
         this.path = '/api/cardpay';
         this.router = express.Router();
         this.flutterWaveApi = apisauce_1.create({
-            baseURL: 'https://api.flutterwave.com/v3/charges?type=card',
+            baseURL: 'https://api.flutterwave.com/v3/payments',
             headers: {
                 Authorization: 'FLWSECK_TEST-701c6e97947fa72009a19de521678c6f-X',
             },
         });
         this.pay = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const encryptedData = services_1.CardPayment.encrypt('FLWSECK_TEST76de52701f56', req.body.toString());
-                const response = yield this.flutterWaveApi.post('', encryptedData);
+                const data = {
+                    tx_ref: `pRef-${Math.random()}`,
+                    amount: req.body.amount,
+                    currency: 'ZMW',
+                    redirect_url: req.body.redirect_url,
+                    payment_options: 'card, mobilemoneyzambia',
+                    meta: {
+                        consumer_id: req.body.consumer_id,
+                        consumer_mac: req.body.consumer_mac,
+                    },
+                    customer: {
+                        email: req.body.email,
+                        phonenumber: req.body.phone_number,
+                        name: req.body.name,
+                    },
+                };
+                const response = yield this.flutterWaveApi.post('', data);
                 res.send(response.data);
             }
             catch (error) {
