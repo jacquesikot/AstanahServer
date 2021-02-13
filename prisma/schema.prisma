@@ -14,6 +14,16 @@ model app_categories {
   created_at    String
 }
 
+model app_notifications {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token      String
+  created_at String
+  app_users  app_users @relation(fields: [user_id], references: [id])
+
+  @@index([user_id], name: "user_id_idx")
+}
+
 model app_order_details {
   id           Int          @id @default(autoincrement())
   order_id     Int
@@ -58,6 +68,39 @@ model app_products {
   app_user_likes    app_user_likes[]
 }
 
+model app_user_billing {
+  id         Int          @id @default(autoincrement())
+  user_id    Int
+  first_name String
+  last_name  String
+  address    String
+  city       String
+  state      String
+  postcode   String
+  country    String
+  phone      String
+  created_at String
+  updated_at String?
+  app_users  app_users    @relation(fields: [user_id], references: [id])
+  app_orders app_orders[]
+
+  @@index([user_id], name: "billing_user_id")
+}
+
+model app_user_cards {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  card_number      String
+  card_holder_name String
+  cvv              String
+  card_exp_date    String
+  created_at       String
+  updated_at       String?
+  app_users        app_users @relation(fields: [user_id], references: [id])
+
+  @@index([user_id], name: "user_id_idx")
+}
+
 model app_user_likes {
   id           Int          @id @default(autoincrement())
   user_id      Int
@@ -66,7 +109,7 @@ model app_user_likes {
   app_products app_products @relation(fields: [product_id], references: [id])
   app_users    app_users    @relation(fields: [user_id], references: [id])
 
-  @@index([product_id], name: "likes_product_id_idx")
+  @@index([product_id], name: "likes_product_id")
   @@index([user_id], name: "user_id_idx")
 }
 
@@ -87,47 +130,4 @@ model app_users {
   app_user_likes    app_user_likes[]
 
   @@index([email], name: "email")
-}
-
-model app_user_cards {
-  id               Int       @id @default(autoincrement())
-  user_id          Int
-  card_number      String
-  card_holder_name String
-  cvv              String
-  card_exp_date    String
-  created_at       String
-  updated_at       String?
-  app_users        app_users @relation(fields: [user_id], references: [id])
-
-  @@index([user_id], name: "user_id_idx")
-}
-
-model app_user_billing {
-  id         Int          @id @default(autoincrement())
-  user_id    Int
-  first_name String
-  last_name  String
-  address    String
-  city       String
-  state      String
-  postcode   String
-  country    String
-  phone      String
-  created_at String
-  updated_at String?
-  app_users  app_users    @relation(fields: [user_id], references: [id])
-  app_orders app_orders[]
-
-  @@index([user_id], name: "billing_user_id_idx")
-}
-
-model app_notifications {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  token      String
-  created_at String
-  app_users  app_users @relation(fields: [user_id], references: [id])
-
-  @@index([user_id], name: "user_id_idx")
 }

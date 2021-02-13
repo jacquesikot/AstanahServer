@@ -31,8 +31,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const services_1 = require("../services");
 const config_1 = require("../config");
-const middlewares_1 = require("../middlewares");
-const cache = new middlewares_1.Cache();
 const categoryServices = new services_1.CategoryServices();
 class Categories {
     constructor() {
@@ -55,7 +53,7 @@ class Categories {
         this.intializeRoutes();
     }
     intializeRoutes() {
-        this.router.get(this.path, cache.categories, this.getCategories);
+        this.router.get(this.path, this.getCategories);
     }
 }
 exports.default = Categories;

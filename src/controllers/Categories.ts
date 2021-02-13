@@ -3,9 +3,7 @@ import { Request, Response } from 'express';
 
 import { CategoryServices } from '../services';
 import { redisClient } from '../config';
-import { Cache } from '../middlewares';
 
-const cache = new Cache();
 const categoryServices = new CategoryServices();
 
 class Categories {
@@ -17,7 +15,7 @@ class Categories {
   }
 
   private intializeRoutes() {
-    this.router.get(this.path, cache.categories, this.getCategories);
+    this.router.get(this.path, this.getCategories);
   }
 
   private getCategories = async (req: Request, res: Response) => {

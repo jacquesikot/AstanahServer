@@ -59,11 +59,22 @@ class Products {
                 console.log(error);
             }
         });
+        this.getProductByCategory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const param = req.query.category;
+                const products = yield productService.filterCategory(param.toString());
+                res.send(products);
+            }
+            catch (error) {
+                console.log('Error from get product by categories', error);
+            }
+        });
         this.intializeRoutes();
     }
     intializeRoutes() {
         this.router.get(this.path, this.getProducts);
         this.router.get(this.path + '/sale', cache.saleProducts, this.getSaleProducts);
+        this.router.get(this.path + '/category', this.getProductByCategory);
     }
 }
 exports.default = Products;

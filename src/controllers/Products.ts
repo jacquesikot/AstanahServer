@@ -24,6 +24,7 @@ class Products {
       cache.saleProducts,
       this.getSaleProducts
     );
+    this.router.get(this.path + '/category', this.getProductByCategory);
   }
 
   private getProducts: RequestHandler = async (req, res) => {
@@ -66,6 +67,16 @@ class Products {
       res.status(200).send(saleProducts);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  private getProductByCategory: RequestHandler = async (req, res) => {
+    try {
+      const param = req.query.category;
+      const products = await productService.filterCategory(param!.toString());
+      res.send(products);
+    } catch (error) {
+      console.log('Error from get product by categories', error);
     }
   };
 }
