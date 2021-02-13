@@ -25,6 +25,8 @@ class Orders {
       if (error) res.status(400).send(error.details[0].message);
 
       const order = await orderServices.newOrder(req.body);
+      console.log(order);
+
       res.send(order);
     } catch (e) {
       console.log(e);

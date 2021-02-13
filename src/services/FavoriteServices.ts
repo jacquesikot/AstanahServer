@@ -19,7 +19,7 @@ export default class FavoriteServices {
       if (!favorites) return [];
 
       const res = await favorites.map(async (favorite) => {
-        const favs = await prisma.app_products.findOne({
+        const favs = await prisma.app_products.findUnique({
           where: {
             id: favorite.product_id,
           },

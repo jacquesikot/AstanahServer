@@ -17,7 +17,7 @@ class User {
 
   private intializeRoutes() {
     this.router.post(this.path, this.addUser);
-    this.router.get(this.path, auth, this.getUser);
+    this.router.get(this.path, this.getUser);
     this.router.post(this.path + `/update`, auth, this.updateUser);
   }
 
@@ -39,8 +39,13 @@ class User {
   };
 
   private getUser = async (req: any, res: Response) => {
-    const user = await services.findUserById(req.user.id);
-    res.send(user);
+    try {
+      console.log(req);
+      const user = await services.findUserById(req.user.id);
+      res.send(user);
+    } catch (error) {
+      console.log('Error from getUser Handler', error);
+    }
   };
 
   private updateUser = async (req: any, res: Response) => {

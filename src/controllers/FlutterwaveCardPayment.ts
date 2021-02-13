@@ -31,7 +31,7 @@ class FlutterwaveCardPayment {
         payment_options: 'card, mobilemoneyzambia',
         meta: {
           consumer_id: req.body.consumer_id,
-          consumer_mac: req.body.consumer_mac,
+          consumer_mac: 'random string',
         },
         customer: {
           email: req.body.email,

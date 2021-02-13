@@ -54,8 +54,14 @@ class User {
             }
         });
         this.getUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield services.findUserById(req.user.id);
-            res.send(user);
+            try {
+                console.log(req);
+                const user = yield services.findUserById(req.user.id);
+                res.send(user);
+            }
+            catch (error) {
+                console.log('Error from getUser Handler', error);
+            }
         });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -70,7 +76,7 @@ class User {
     }
     intializeRoutes() {
         this.router.post(this.path, this.addUser);
-        this.router.get(this.path, middlewares_1.auth, this.getUser);
+        this.router.get(this.path, this.getUser);
         this.router.post(this.path + `/update`, middlewares_1.auth, this.updateUser);
     }
 }

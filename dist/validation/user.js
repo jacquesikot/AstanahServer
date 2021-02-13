@@ -16,14 +16,15 @@ const validateUser = (user) => {
     });
     return schema.validate(user);
 };
-exports.validateAuth = (credential) => {
+const validateAuth = (credential) => {
     const schema = joi_1.default.object({
         email: joi_1.default.string().min(5).max(255).required().email(),
         password: joi_1.default.string().min(3).max(255).required(),
     });
     return schema.validate(credential);
 };
-exports.validateGoogleAuth = (credentials) => {
+exports.validateAuth = validateAuth;
+const validateGoogleAuth = (credentials) => {
     const schema = joi_1.default.object({
         id: joi_1.default.string().required(),
         firstName: joi_1.default.string(),
@@ -33,5 +34,6 @@ exports.validateGoogleAuth = (credentials) => {
     });
     return schema.validate(credentials);
 };
+exports.validateGoogleAuth = validateGoogleAuth;
 exports.default = validateUser;
 //# sourceMappingURL=user.js.map

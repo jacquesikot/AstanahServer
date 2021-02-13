@@ -23,6 +23,7 @@ class Orders {
                 if (error)
                     res.status(400).send(error.details[0].message);
                 const order = yield orderServices.newOrder(req.body);
+                console.log(order);
                 res.send(order);
             }
             catch (e) {

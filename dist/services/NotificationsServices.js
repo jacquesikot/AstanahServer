@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.storeToken = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-exports.storeToken = ({ user_id, token }) => __awaiter(void 0, void 0, void 0, function* () {
+const storeToken = ({ user_id, token }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const savedToken = yield prisma.app_notifications.create({
             data: {
@@ -27,4 +27,5 @@ exports.storeToken = ({ user_id, token }) => __awaiter(void 0, void 0, void 0, f
         console.log('Error saving Token', error);
     }
 });
+exports.storeToken = storeToken;
 //# sourceMappingURL=NotificationsServices.js.map

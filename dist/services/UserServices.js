@@ -41,7 +41,7 @@ class UserService {
     findUser(user_params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let user = yield prisma.app_users.findOne({
+                let user = yield prisma.app_users.findUnique({
                     where: { email: user_params.email },
                 });
                 return user;
@@ -54,7 +54,7 @@ class UserService {
     findOauthUser(user_email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let user = yield prisma.app_users.findOne({
+                let user = yield prisma.app_users.findUnique({
                     where: { email: user_email },
                 });
                 return user;
@@ -67,7 +67,7 @@ class UserService {
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let user = yield prisma.app_users.findOne({ where: { id: id } });
+                let user = yield prisma.app_users.findUnique({ where: { id: id } });
                 return user;
             }
             catch (e) {

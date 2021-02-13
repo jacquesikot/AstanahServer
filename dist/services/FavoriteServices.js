@@ -24,7 +24,7 @@ class FavoriteServices {
                 if (!favorites)
                     return [];
                 const res = yield favorites.map((favorite) => __awaiter(this, void 0, void 0, function* () {
-                    const favs = yield prisma.app_products.findOne({
+                    const favs = yield prisma.app_products.findUnique({
                         where: {
                             id: favorite.product_id,
                         },

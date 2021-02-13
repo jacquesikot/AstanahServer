@@ -18,7 +18,7 @@ interface UserUpdate {
 export default class UserService {
   public async findUser(user_params: IUser) {
     try {
-      let user = await prisma.app_users.findOne({
+      let user = await prisma.app_users.findUnique({
         where: { email: user_params.email },
       });
       return user;
@@ -29,7 +29,7 @@ export default class UserService {
 
   public async findOauthUser(user_email: string) {
     try {
-      let user = await prisma.app_users.findOne({
+      let user = await prisma.app_users.findUnique({
         where: { email: user_email },
       });
       return user;
@@ -40,7 +40,7 @@ export default class UserService {
 
   public async findUserById(id: number) {
     try {
-      let user = await prisma.app_users.findOne({ where: { id: id } });
+      let user = await prisma.app_users.findUnique({ where: { id: id } });
       return user;
     } catch (e) {
       console.log(e);
